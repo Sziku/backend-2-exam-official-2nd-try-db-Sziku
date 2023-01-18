@@ -19,13 +19,13 @@ public class RadioCharts {
     public List<String> getArtists() {
         final String SQL = "SELECT artist from music_broadcast group by artist order by artist ASC;";
 
-        try(Connection con = DriverManager.getConnection(dbUrl,dbUser,dbPassword)){
+        try (Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
             PreparedStatement st = con.prepareStatement(SQL);
             ResultSet rs = st.executeQuery();
 
             List<String> artist = new ArrayList<>();
 
-            while (rs.next()){
+            while (rs.next()) {
                 artist.add(rs.getString(1));
             }
             return artist;
@@ -37,16 +37,17 @@ public class RadioCharts {
     }
 
     public String getMostPlayedSong() {
-        final String SQL = "SELECT song, times_aired from music_broadcast group by song, times_aired order by times_aired DESC limit 1; ";
+        final String SQL = "SELECT song, times_aired from music_broadcast group by song, times_aired order by times_aired desc, song asc limit 1; ";
 
-        try(Connection con = DriverManager.getConnection(dbUrl,dbUser,dbPassword)){
+        try (Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
             PreparedStatement st = con.prepareStatement(SQL);
             ResultSet rs = st.executeQuery();
 
+            rs.next();
+            return rs.getString(1);
 
-            while (rs.next()){
-                return rs.getString(1);
-            }
+
+
 
 
         } catch (SQLException e) {
@@ -56,16 +57,15 @@ public class RadioCharts {
     }
 
     public String getMostActiveArtist() {
-        final String SQL = "select artist, count(artist) as mostSong from music_broadcast group by artist order by count(artist) limit 1";
+        final String SQL = "select artist, count(artist) as mostSong from music_broadcast group by artist order by count(artist), artist asc limit 1";
 
-        try(Connection con = DriverManager.getConnection(dbUrl,dbUser,dbPassword)){
+        try (Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
             PreparedStatement st = con.prepareStatement(SQL);
             ResultSet rs = st.executeQuery();
 
 
-            while (rs.next()){
-                return rs.getString(1);
-            }
+            rs.next();
+            return rs.getString(1);
 
 
         } catch (SQLException e) {
